@@ -120,7 +120,7 @@ button {
     .letter-body { font-size: 11pt; line-height: 1.6; margin-top: 8mm; }
     .footer {
         position: absolute;
-        bottom: 10mm;
+        bottom: 5mm;
         width: calc(100% - 20mm);
         font-size: 10pt;
         display: flex;
@@ -129,4 +129,5 @@ button {
     }
     .signature { font-size: 11pt; line-height: 1.4; }
     .copy-indicator { font-weight: bold; font-style: italic; }
+
 }
