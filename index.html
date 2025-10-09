@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Room Cleaning Letter Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <h1>Room Cleaning Letter Generator</h1>
+
+        <div class="upload-section">
+            <label for="csv-upload"><strong>Step 1:</strong> Upload Guest List (CSV)</label>
+            <input type="file" id="csv-upload" accept=".csv">
+            <p id="upload-status">Please upload a CSV file with two columns: Room Number, Guest Name.</p>
+        </div>
+
+        <div id="letter-generation-section" class="hidden">
+            <div class="input-group">
+                <p><strong>Step 2:</strong> Enter room numbers for letters.</p>
+                <div id="room-entry-container">
+                    </div>
+                <div class="actions">
+                    <button id="add-room-btn" type="button">+ Add Another Room</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="clerk-name"><strong>Step 3:</strong> Enter Your Name (Clerk)</label>
+                <input type="text" id="clerk-name" placeholder="e.g., Mark Nolan / マーク・ノラン">
+            </div>
+
+            <button id="generate-btn" type="button">Generate & Preview Letters</button>
+        </div>
+    </div>
+
+    <div id="print-area"></div>
+
+    <template id="letter-template">
+        <div class="page">
+            <div class="letter-half front-desk-copy">
+                <div class="header">
+                    <h2 class="title"></h2>
+                    <img src="remm.jpg" alt="Hotel Logo" class="logo">
+                </div>
+                <p class="recipient-info">
+                    <strong><span class="label-room-no">Room No:</span></strong> <span class="data-room-number"></span><br>
+                    <strong><span class="label-guest-name">Guest Name:</span></strong> <span class="data-guest-name"></span>
+                </p>
+                <div class="letter-body"></div>
+                <div class="footer">
+                    <div class="signature">
+                        <span class="label-clerk">Clerk</span><br>
+                        <span class="data-clerk-name"></span>
+                    </div>
+                    <div class="date-info">
+                        <strong><span class="label-date">Date:</span></strong> <span class="data-date"></span>
+                    </div>
+                    <p class="copy-indicator">[ FRONT DESK COPY ]</p>
+                </div>
+            </div>
+            <div class="letter-half guest-copy">
+                 <div class="header">
+                    <h2 class="title"></h2>
+                    <img src="remm.jpg" alt="Hotel Logo" class="logo">
+                </div>
+                <p class="recipient-info">
+                    <strong><span class="label-room-no">Room No:</span></strong> <span class="data-room-number"></span><br>
+                    <strong><span class="label-guest-name">Guest Name:</span></strong> <span class="data-guest-name"></span>
+                </p>
+                <div class="letter-body"></div>
+                <div class="footer">
+                    <div class="signature">
+                        <span class="label-clerk">Clerk</span><br>
+                        <span class="data-clerk-name"></span>
+                    </div>
+                     <div class="date-info">
+                        <strong><span class="label-date">Date:</span></strong> <span class="data-date"></span>
+                    </div>
+                    <p class="copy-indicator"></p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
