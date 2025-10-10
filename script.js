@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterContent = {
         en: {
             title: 'Room Cleaning Notification',
-            body: `<p>Thank you for staying with us.</p><p>We would like to inform you that, in accordance with our hotel policy, rooms are cleaned on the third day after two consecutive days without cleaning. Please be advised that our staff will enter your room tomorrow for the scheduled cleaning.</p><p>We kindly ask that you place the “Clean Up” tag outside your door and return the “Do Not Disturb,” “No Cleaning,” or “Eco Cleaning” tags inside the room. Room cleaning is available between 10:00 AM and 2:00 PM.</p><p>If you have any questions, please feel free to contact us.</p><p>We appreciate your understanding and cooperation.<br>Thank you.</p>`
+            body: `<p>Thank you for staying with us.</p><p>In accordance with hotel policy, we clean rooms that have not been serviced for two consecutive days. Therefore, our staff will be entering your room for scheduled cleaning tomorrow between 10:00 AM and 2:00 PM.</p><p>Please place the “Clean Up” tag on your door. If you have any questions, please feel free to contact us.</p><p>We appreciate your understanding and cooperation.</p>`
         },
         ja: {
             title: '客室清掃のお知らせ',
-            body: `<p>ご宿泊いただき、誠にありがとうございます。</p><p>当ホテルのポリシーに基づき、2日間清掃が行われなかったお部屋につきましては、3日目に清掃を実施しております。つきましては、明日、客室清掃のためスタッフがお部屋に入室させていただきますので、予めご了承ください。</p><p>お部屋の外に「清掃してください（Clean Up）」の札をお出しいただき、「起こさないでください（Do Not Disturb）」等の札は室内にお戻しくださいますようお願いいたします。客室清掃は午前10時から午後2時の間で承っております。</p><p>ご不明な点がございましたら、お気軽にお問い合わせください。</p><p>何卒、ご理解ご協力のほど、よろしくお願い申し上げます。</p>`
+            body: `<p>ご宿泊いただき、誠にありがとうございます。</p><p>当ホテルのポリシーに基づき、2日間清掃が行われなかったお部屋は、翌日に清掃を実施しております。つきましては、明日の午前10時から午後2時の間に、スタッフがお部屋の清掃に入室いたします。</p><p>お部屋のドアに「清掃してください」の札をお出しください。ご不明な点がございましたら、お気軽にお問い合わせください。</p><p>何卒、ご理解ご協力のほど、よろしくお願い申し上げます。</p>`
         }
     };
 
@@ -19,16 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
             guestName: 'Guest Name:',
             clerk: 'Clerk',
             date: 'Date:',
-            frontDeskCopy: '[ FRONT DESK COPY ]',
-            guestCopy: '[ GUEST COPY ]'
+            frontDeskCopy: '[ FRONT DESK COPY ]'
         },
         ja: {
             roomNo: '部屋番号:',
             guestName: 'お客様名:',
             clerk: '担当者',
             date: '日付:',
-            frontDeskCopy: '[ フロント控え ]',
-            guestCopy: '[ お客様控え ]'
+            frontDeskCopy: '[ フロント控え ]'
         }
     };
 
@@ -43,35 +41,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterTemplate = document.getElementById('letter-template');
 
     /**
-     * UPDATED: Parses CSV text where Room No is in Column B and Name is in Column D.
+     * UPDATED: Now groups multiple guests per room and filters out numeric-only names.
      */
     const parseCSV = (csvText) => {
+        // The data object will now hold an array of names for each room.
         const data = {};
         const lines = csvText.split(/\r\n|\n/);
+        const unquote = (str) => str.replace(/^"|"$/g, '');
+        // This regex checks if a string contains any letters (English or Japanese).
+        const hasLetters = (str) => /[a-zA-Zァ-ヶーｦ-ﾟ]/.test(str);
 
         lines.forEach((line, index) => {
             const trimmedLine = line.trim();
-            if (trimmedLine === '') return; // Skip empty lines
-
-            const parts = trimmedLine.split(',');
-
-            // Ensure the line has at least 4 columns to access D (index 3)
-            if (parts.length < 4) {
-                return; // Skip lines that are too short
-            }
-
-            // Column B is parts[1], Column D is parts[3]
-            const roomColumn = parts[1] ? parts[1].trim() : '';
-            const nameColumn = parts[3] ? parts[3].trim() : '';
+            if (trimmedLine === '') return;
             
-            // Skip a header row if the room number column isn't a number
-            if (index === 0 && isNaN(parseInt(roomColumn, 10))) {
-                return; // Skips the header
-            }
+            const parts = trimmedLine.split(',');
+            if (parts.length < 4) return;
+            
+            const roomColumn = parts[1] ? unquote(parts[1].trim()) : '';
+            const nameColumn = parts[3] ? unquote(parts[3].trim()) : '';
+            
+            if (index === 0 && isNaN(parseInt(roomColumn, 10))) return;
 
-            // Only add the record if both a room number and a name exist
-            if (roomColumn && nameColumn) {
-                data[roomColumn] = nameColumn;
+            // Only process if the room number exists and the name is not just numbers.
+            if (roomColumn && nameColumn && hasLetters(nameColumn)) {
+                // If the room key doesn't exist yet, create it with an empty array.
+                if (!data[roomColumn]) {
+                    data[roomColumn] = [];
+                }
+                // Push the valid name into the array for that room.
+                data[roomColumn].push(nameColumn);
             }
         });
         return data;
@@ -86,13 +85,13 @@ document.addEventListener('DOMContentLoaded', () => {
             guestData = parseCSV(csvText);
             const recordCount = Object.keys(guestData).length;
             if (recordCount > 0) {
-                uploadStatus.textContent = `✅ Success! ${recordCount} guest records loaded.`;
+                uploadStatus.textContent = `✅ Success! ${recordCount} rooms loaded.`;
                 uploadStatus.style.color = 'green';
                 letterGenerationSection.classList.remove('hidden');
                 roomEntryContainer.innerHTML = '';
                 addRoomRow();
             } else {
-                uploadStatus.textContent = '❌ Error: Could not find valid data in the CSV. Please check the column format.';
+                uploadStatus.textContent = '❌ Error: Could not find valid data. Please check the CSV file format.';
                 uploadStatus.style.color = 'red';
                 letterGenerationSection.classList.add('hidden');
             }
@@ -108,17 +107,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowId = `row-${Date.now()}`;
         const roomRow = document.createElement('div');
         roomRow.className = 'room-row';
-        roomRow.innerHTML = `<label for="room-${rowId}">Room Number:</label><input type="text" id="room-${rowId}" class="room-number-input" placeholder="e.g., 101"><span class="guest-name-display">[Guest Name]</span>`;
+        roomRow.innerHTML = `<label for="room-${rowId}">Room Number:</label><input type="text" id="room-${rowId}" class="room-number-input" placeholder="e.g., 501"><span class="guest-name-display">[Guest Name]</span>`;
         roomEntryContainer.appendChild(roomRow);
         roomRow.querySelector('.room-number-input').addEventListener('keyup', handleRoomInput);
     };
 
+    /**
+     * UPDATED: Now joins multiple guest names with a comma.
+     */
     const handleRoomInput = (event) => {
         const input = event.target;
         const roomNumber = input.value.trim();
         const nameDisplay = input.nextElementSibling;
-        nameDisplay.textContent = guestData[roomNumber] || 'Guest not found';
-        nameDisplay.style.color = guestData[roomNumber] ? '#005a87' : '#dc3545';
+        
+        const names = guestData[roomNumber]; // This is now an array of names
+        
+        if (names && names.length > 0) {
+            nameDisplay.textContent = names.join(', '); // Join multiple names
+            nameDisplay.style.color = '#005a87';
+        } else {
+            nameDisplay.textContent = 'Guest not found';
+            nameDisplay.style.color = '#dc3545';
+        }
     };
     
     const isJapaneseName = (str) => {
@@ -139,29 +149,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         roomRows.forEach(row => {
             const roomNumber = row.querySelector('.room-number-input').value.trim();
-            const guestName = guestData[roomNumber];
+            const guestNames = guestData[roomNumber]; // This is an array
 
-            if (guestName) {
+            if (guestNames && guestNames.length > 0) {
                 lettersGenerated++;
-                const language = isJapaneseName(guestName) ? 'ja' : 'en';
+                // Join the names for the letter, then check for Japanese characters
+                const combinedGuestName = guestNames.join(', ');
+                
+                const language = isJapaneseName(combinedGuestName) ? 'ja' : 'en';
                 const content = letterContent[language];
                 const labels = letterLabels[language];
                 const letterClone = letterTemplate.content.cloneNode(true);
 
                 letterClone.querySelectorAll('.title').forEach(el => el.innerHTML = content.title);
                 letterClone.querySelectorAll('.data-room-number').forEach(el => el.textContent = roomNumber);
-                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = guestName);
+                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = combinedGuestName);
                 letterClone.querySelectorAll('.letter-body').forEach(el => el.innerHTML = content.body);
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
-
+                
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
                 letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
                 letterClone.querySelectorAll('.label-clerk').forEach(el => el.textContent = labels.clerk);
                 letterClone.querySelectorAll('.label-date').forEach(el => el.textContent = labels.date);
                 
                 letterClone.querySelector('.front-desk-copy .copy-indicator').textContent = labels.frontDeskCopy;
-                letterClone.querySelector('.guest-copy .copy-indicator').textContent = labels.guestCopy;
 
                 printArea.appendChild(letterClone);
             }
