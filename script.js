@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const letterContent = {
         en: {
             title: 'Room Cleaning Notification',
-            body: `<p>Thank you for staying with us.</p><p>We would like to inform you that, in accordance with our hotel policy, rooms are cleaned on the third day after two consecutive days without cleaning. Please be advised that our staff will enter your room tomorrow for the scheduled cleaning.</p><p>We kindly ask that you place the “Clean Up” tag outside your door and return the “Do Not Disturb,” “No Cleaning,” or “Eco Cleaning” tags inside the room. Room cleaning is available between 10:00 AM and 2:00 PM.</p><p>If you have any questions, please feel free to contact us.</p><p>We appreciate your understanding and cooperation.<br>Thank you.<br></p>`
+            body: `<p>Thank you for staying with us.</p><p>We would like to inform you that, in accordance with our hotel policy, rooms are cleaned on the third day after two consecutive days without cleaning. Please be advised that our staff will enter your room tomorrow for the scheduled cleaning.</p><p>We kindly ask that you place the “Clean Up” tag outside your door and return the “Do Not Disturb,” “No Cleaning,” or “Eco Cleaning” tags inside the room. Room cleaning is available between 10:00 AM and 2:00 PM.</p><p>If you have any questions, please feel free to contact us.</p><p>We appreciate your understanding and cooperation.<br>Thank you.</p>`
         },
         ja: {
             title: '客室清掃のお知らせ',
@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // =========== NEW: OBJECT FOR TRANSLATED LABELS ===========
     const letterLabels = {
         en: {
             roomNo: 'Room No:',
@@ -21,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clerk: 'Clerk',
             date: 'Date:',
             frontDeskCopy: '[ FRONT DESK COPY ]',
-            guestCopy: ''
+            guestCopy: '[ GUEST COPY ]'
         },
         ja: {
             roomNo: '部屋番号:',
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clerk: '担当者',
             date: '日付:',
             frontDeskCopy: '[ フロント控え ]',
-            guestCopy: ''
+            guestCopy: '[ お客様控え ]'
         }
     };
 
@@ -43,19 +42,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const printArea = document.getElementById('print-area');
     const letterTemplate = document.getElementById('letter-template');
 
+    /**
+     * UPDATED: Parses CSV text where Room No is in Column B and Name is in Column D.
+     */
     const parseCSV = (csvText) => {
         const data = {};
         const lines = csvText.split(/\r\n|\n/);
+
         lines.forEach((line, index) => {
             const trimmedLine = line.trim();
-            if (trimmedLine === '') return;
-            const firstColumn = trimmedLine.split(',')[0].trim();
-            if (index === 0 && isNaN(parseInt(firstColumn, 10))) return;
+            if (trimmedLine === '') return; // Skip empty lines
+
             const parts = trimmedLine.split(',');
-            if (parts.length >= 2) {
-                const roomNumber = parts[0].trim();
-                const guestName = parts.slice(1).join(',').trim();
-                data[roomNumber] = guestName;
+
+            // Ensure the line has at least 4 columns to access D (index 3)
+            if (parts.length < 4) {
+                return; // Skip lines that are too short
+            }
+
+            // Column B is parts[1], Column D is parts[3]
+            const roomColumn = parts[1] ? parts[1].trim() : '';
+            const nameColumn = parts[3] ? parts[3].trim() : '';
+            
+            // Skip a header row if the room number column isn't a number
+            if (index === 0 && isNaN(parseInt(roomColumn, 10))) {
+                return; // Skips the header
+            }
+
+            // Only add the record if both a room number and a name exist
+            if (roomColumn && nameColumn) {
+                data[roomColumn] = nameColumn;
             }
         });
         return data;
@@ -76,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 roomEntryContainer.innerHTML = '';
                 addRoomRow();
             } else {
-                uploadStatus.textContent = '❌ Error: Could not parse the CSV or the file is empty.';
+                uploadStatus.textContent = '❌ Error: Could not find valid data in the CSV. Please check the column format.';
                 uploadStatus.style.color = 'red';
                 letterGenerationSection.classList.add('hidden');
             }
@@ -85,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
              uploadStatus.textContent = '❌ Error: Could not read the file.';
              uploadStatus.style.color = 'red';
         };
-        reader.readAsText(file, 'UTF-8'); // Specify UTF-8 for Japanese characters
+        reader.readAsText(file, 'Shift-JIS');
     };
 
     const addRoomRow = () => {
@@ -104,10 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
         nameDisplay.textContent = guestData[roomNumber] || 'Guest not found';
         nameDisplay.style.color = guestData[roomNumber] ? '#005a87' : '#dc3545';
     };
+    
+    const isJapaneseName = (str) => {
+        return /[ァ-ヶーｦ-ﾟ]/.test(str);
+    };
 
-    const isJapaneseName = (str) => /[ァ-ヶー]/.test(str);
-
-    // =========== UPDATED: GENERATE LETTERS FUNCTION ===========
     const generateLetters = () => {
         const clerkName = clerkNameInput.value.trim();
         if (!clerkName) {
@@ -128,10 +145,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 lettersGenerated++;
                 const language = isJapaneseName(guestName) ? 'ja' : 'en';
                 const content = letterContent[language];
-                const labels = letterLabels[language]; // Get the correct labels
+                const labels = letterLabels[language];
                 const letterClone = letterTemplate.content.cloneNode(true);
 
-                // Populate dynamic content
                 letterClone.querySelectorAll('.title').forEach(el => el.innerHTML = content.title);
                 letterClone.querySelectorAll('.data-room-number').forEach(el => el.textContent = roomNumber);
                 letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = guestName);
@@ -139,16 +155,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
 
-                // Populate translated labels
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
                 letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
                 letterClone.querySelectorAll('.label-clerk').forEach(el => el.textContent = labels.clerk);
                 letterClone.querySelectorAll('.label-date').forEach(el => el.textContent = labels.date);
                 
-                // Special handling for copy indicators as they don't share a class
                 letterClone.querySelector('.front-desk-copy .copy-indicator').textContent = labels.frontDeskCopy;
                 letterClone.querySelector('.guest-copy .copy-indicator').textContent = labels.guestCopy;
-
 
                 printArea.appendChild(letterClone);
             }
