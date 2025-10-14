@@ -123,7 +123,7 @@ button {
         max-width: 120mm;
         max-height: 40mm;
         object-fit: contain;
-        margin-bottom: 3mm;
+        margin-bottom: 0mm;
     }
     .title {
         font-size: 14pt;
@@ -158,3 +158,4 @@ button {
     .signature { font-size: 11pt; line-height: 1.4; }
     .copy-indicator { font-weight: bold; font-style: italic; }
 }
+
