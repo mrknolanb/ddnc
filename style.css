@@ -83,7 +83,7 @@ button {
 }
 #print-area { display: none; }
 
-/* ================= PRINT STYLES (NEW CENTERED HEADER) ================= */
+/* ================= PRINT STYLES (CENTERED HEADER) ================= */
 @media print {
     body { margin: 0; background: none; }
     .app-container { display: none; }
@@ -108,20 +108,20 @@ button {
     }
     .header {
         display: flex;
-        flex-direction: column; /* Stacks logo and title vertically */
-        align-items: center;   /* Centers them horizontally */
+        flex-direction: column;
+        align-items: center;
         border-bottom: 1px solid #333;
         padding-bottom: 5mm;
         margin-bottom: 5mm;
     }
     .logo {
-        max-width: 60mm;     /* Increased logo width */
-        max-height: 20mm;    /* Increased logo height */
+        max-width: 120mm;     /* Doubled logo width */
+        max-height: 40mm;    /* Doubled logo height */
         object-fit: contain;
-        margin-bottom: 3mm;    /* Adds space between logo and title */
+        margin-bottom: 3mm;
     }
     .title {
-        font-size: 14pt;     /* Reduced title font size */
+        font-size: 14pt;
         font-weight: bold;
         margin: 0;
     }
