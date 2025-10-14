@@ -98,11 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file, 'Shift-JIS');
     };
 
+    // UPDATED: Now includes the delete button in the generated HTML.
     const addRoomRow = () => {
         const rowId = `row-${Date.now()}`;
         const roomRow = document.createElement('div');
         roomRow.className = 'room-row';
-        roomRow.innerHTML = `<label for="room-${rowId}">Room Number:</label><input type="text" id="room-${rowId}" class="room-number-input" placeholder="e.g., 501"><span class="guest-name-display">[Guest Name]</span>`;
+        roomRow.innerHTML = `
+            <label for="room-${rowId}">Room Number:</label>
+            <input type="text" id="room-${rowId}" class="room-number-input" placeholder="e.g., 501">
+            <span class="guest-name-display">[Guest Name]</span>
+            <button type="button" class="delete-room-btn">X</button>
+        `;
         roomEntryContainer.appendChild(roomRow);
         roomRow.querySelector('.room-number-input').addEventListener('keyup', handleRoomInput);
     };
@@ -110,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleRoomInput = (event) => {
         const input = event.target;
         const roomNumber = input.value.trim();
-        const nameDisplay = input.nextElementSibling;
+        const nameDisplay = input.closest('.room-row').querySelector('.guest-name-display');
         
         const names = guestData[roomNumber];
         
@@ -146,25 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (guestNames && guestNames.length > 0) {
                 lettersGenerated++;
                 const combinedGuestName = guestNames.join(', ');
-                
                 const language = isJapaneseName(combinedGuestName) ? 'ja' : 'en';
-                const content = letterContent[language];
-                const labels = letterLabels[language];
                 
-                // =========== NEW: Add prefix to the guest name ===========
                 let formattedGuestName;
                 if (language === 'ja') {
                     formattedGuestName = combinedGuestName + ' 様';
                 } else {
                     formattedGuestName = 'Mr./Ms. ' + combinedGuestName;
                 }
-                // =========================================================
                 
+                const content = letterContent[language];
+                const labels = letterLabels[language];
                 const letterClone = letterTemplate.content.cloneNode(true);
 
                 letterClone.querySelectorAll('.title').forEach(el => el.innerHTML = content.title);
                 letterClone.querySelectorAll('.data-room-number').forEach(el => el.textContent = roomNumber);
-                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = formattedGuestName); // Use the formatted name
+                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = formattedGuestName);
                 letterClone.querySelectorAll('.letter-body').forEach(el => el.innerHTML = content.body);
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
@@ -188,6 +191,18 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('No valid room numbers were entered. Please enter at least one valid room number from the list.');
         }
     };
+
+    // NEW: Event listener for the entire container to handle clicks on delete buttons.
+    roomEntryContainer.addEventListener('click', function(event) {
+        // Check if the clicked element has the 'delete-room-btn' class
+        if (event.target.classList.contains('delete-room-btn')) {
+            // Find the closest parent '.room-row' and remove it
+            const rowToRemove = event.target.closest('.room-row');
+            if (rowToRemove) {
+                rowToRemove.remove();
+            }
+        }
+    });
 
     csvUploadInput.addEventListener('change', handleFileUpload);
     addRoomBtn.addEventListener('click', addRoomRow);
