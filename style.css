@@ -81,15 +81,32 @@ button {
     font-size: 14px;
     padding: 8px 15px;
 }
+
+/* NEW: Style for the delete button */
+.delete-room-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    line-height: 25px;
+    text-align: center;
+    padding: 0;
+}
+.delete-room-btn:hover {
+    background-color: #c82333;
+}
+
 #print-area { display: none; }
 
-/* ================= PRINT STYLES (PAGE ALIGNMENT FIX) ================= */
+/* ================= PRINT STYLES (CENTERED HEADER) ================= */
 @media print {
-    /* NEW: This rule forces all pages to have the same margins, fixing the alignment issue. */
     @page {
         margin: 0;
     }
-
     body { margin: 0; background: none; }
     .app-container { display: none; }
     #print-area { display: block; }
@@ -123,7 +140,7 @@ button {
         max-width: 120mm;
         max-height: 40mm;
         object-fit: contain;
-        margin-bottom: 0mm;
+        margin-bottom: 3mm;
     }
     .title {
         font-size: 14pt;
@@ -158,4 +175,3 @@ button {
     .signature { font-size: 11pt; line-height: 1.4; }
     .copy-indicator { font-weight: bold; font-style: italic; }
 }
-
