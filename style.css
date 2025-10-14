@@ -83,7 +83,7 @@ button {
 }
 #print-area { display: none; }
 
-/* ================= PRINT STYLES (STABLE FLEXBOX LAYOUT) ================= */
+/* ================= PRINT STYLES (NEW CENTERED HEADER) ================= */
 @media print {
     body { margin: 0; background: none; }
     .app-container { display: none; }
@@ -103,22 +103,27 @@ button {
         display: flex;
         flex-direction: column;
     }
-    /* UPDATED: Dashed line is now a top border on the bottom copy */
     .front-desk-copy { 
         border-top: 2px dashed #000; 
     }
     .header {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column; /* Stacks logo and title vertically */
+        align-items: center;   /* Centers them horizontally */
         border-bottom: 1px solid #333;
         padding-bottom: 5mm;
+        margin-bottom: 5mm;
     }
-    .title { font-size: 16pt; margin: 0; }
     .logo {
-        max-width: 40mm;
-        max-height: 15mm;
+        max-width: 60mm;     /* Increased logo width */
+        max-height: 20mm;    /* Increased logo height */
         object-fit: contain;
+        margin-bottom: 3mm;    /* Adds space between logo and title */
+    }
+    .title {
+        font-size: 14pt;     /* Reduced title font size */
+        font-weight: bold;
+        margin: 0;
     }
     .recipient-info {
         display: flex;
@@ -126,7 +131,6 @@ button {
         align-items: center;
         font-size: 12pt;
         line-height: 1.5;
-        margin-top: 5mm;
     }
     .guest-name-line {
         font-size: 12pt;
