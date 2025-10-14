@@ -115,8 +115,8 @@ button {
         margin-bottom: 5mm;
     }
     .logo {
-        max-width: 120mm;     /* Doubled logo width */
-        max-height: 40mm;    /* Doubled logo height */
+        max-width: 100mm !important;   /* Forcefully larger width */
+        max-height: 50mm !important;  /* Forcefully larger height */
         object-fit: contain;
         margin-bottom: 3mm;
     }
