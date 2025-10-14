@@ -83,8 +83,13 @@ button {
 }
 #print-area { display: none; }
 
-/* ================= PRINT STYLES (CENTERED HEADER) ================= */
+/* ================= PRINT STYLES (PAGE ALIGNMENT FIX) ================= */
 @media print {
+    /* NEW: This rule forces all pages to have the same margins, fixing the alignment issue. */
+    @page {
+        margin: 0;
+    }
+
     body { margin: 0; background: none; }
     .app-container { display: none; }
     #print-area { display: block; }
@@ -115,8 +120,8 @@ button {
         margin-bottom: 5mm;
     }
     .logo {
-        max-width: 100mm !important;   /* Forcefully larger width */
-        max-height: 50mm !important;  /* Forcefully larger height */
+        max-width: 120mm;
+        max-height: 40mm;
         object-fit: contain;
         margin-bottom: 3mm;
     }
