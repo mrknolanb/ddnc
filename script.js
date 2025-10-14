@@ -162,3 +162,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
                 
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
+                letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
+                letterClone.querySelectorAll('.label-clerk').forEach(el => el.textContent = labels.clerk);
+                letterClone.querySelectorAll('.label-date').forEach(el => el.textContent = labels.date);
+                
+                letterClone.querySelector('.front-desk-copy .copy-indicator').textContent = labels.frontDeskCopy;
+
+                printArea.appendChild(letterClone);
+            }
+        });
+        
+        if (lettersGenerated > 0) {
+            // A small delay to ensure images are rendered before printing.
+            setTimeout(() => {
+                window.print();
+            }, 100);
+        } else {
+            alert('No valid room numbers were entered. Please enter at least one valid room number from the list.');
+        }
+    };
+
+    csvUploadInput.addEventListener('change', handleFileUpload);
+    addRoomBtn.addEventListener('click', addRoomRow);
+    generateBtn.addEventListener('click', generateLetters);
+});
