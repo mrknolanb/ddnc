@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // =========== NEW: Preload the logo image to prevent print preview issues ===========
+    const logo = new Image();
+    logo.src = 'remm.jpg';
+    // =================================================================================
+
     let guestData = {};
 
     const letterContent = {
@@ -40,15 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const printArea = document.getElementById('print-area');
     const letterTemplate = document.getElementById('letter-template');
 
-    /**
-     * UPDATED: Now groups multiple guests per room and filters out numeric-only names.
-     */
     const parseCSV = (csvText) => {
-        // The data object will now hold an array of names for each room.
         const data = {};
         const lines = csvText.split(/\r\n|\n/);
         const unquote = (str) => str.replace(/^"|"$/g, '');
-        // This regex checks if a string contains any letters (English or Japanese).
         const hasLetters = (str) => /[a-zA-Zァ-ヶーｦ-ﾟ]/.test(str);
 
         lines.forEach((line, index) => {
@@ -63,13 +63,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (index === 0 && isNaN(parseInt(roomColumn, 10))) return;
 
-            // Only process if the room number exists and the name is not just numbers.
             if (roomColumn && nameColumn && hasLetters(nameColumn)) {
-                // If the room key doesn't exist yet, create it with an empty array.
                 if (!data[roomColumn]) {
                     data[roomColumn] = [];
                 }
-                // Push the valid name into the array for that room.
                 data[roomColumn].push(nameColumn);
             }
         });
@@ -112,18 +109,15 @@ document.addEventListener('DOMContentLoaded', () => {
         roomRow.querySelector('.room-number-input').addEventListener('keyup', handleRoomInput);
     };
 
-    /**
-     * UPDATED: Now joins multiple guest names with a comma.
-     */
     const handleRoomInput = (event) => {
         const input = event.target;
         const roomNumber = input.value.trim();
         const nameDisplay = input.nextElementSibling;
         
-        const names = guestData[roomNumber]; // This is now an array of names
+        const names = guestData[roomNumber];
         
         if (names && names.length > 0) {
-            nameDisplay.textContent = names.join(', '); // Join multiple names
+            nameDisplay.textContent = names.join(', ');
             nameDisplay.style.color = '#005a87';
         } else {
             nameDisplay.textContent = 'Guest not found';
@@ -149,11 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         roomRows.forEach(row => {
             const roomNumber = row.querySelector('.room-number-input').value.trim();
-            const guestNames = guestData[roomNumber]; // This is an array
+            const guestNames = guestData[roomNumber];
 
             if (guestNames && guestNames.length > 0) {
                 lettersGenerated++;
-                // Join the names for the letter, then check for Japanese characters
                 const combinedGuestName = guestNames.join(', ');
                 
                 const language = isJapaneseName(combinedGuestName) ? 'ja' : 'en';
@@ -169,24 +162,3 @@ document.addEventListener('DOMContentLoaded', () => {
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
                 
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
-                letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
-                letterClone.querySelectorAll('.label-clerk').forEach(el => el.textContent = labels.clerk);
-                letterClone.querySelectorAll('.label-date').forEach(el => el.textContent = labels.date);
-                
-                letterClone.querySelector('.front-desk-copy .copy-indicator').textContent = labels.frontDeskCopy;
-
-                printArea.appendChild(letterClone);
-            }
-        });
-        
-        if (lettersGenerated > 0) {
-            window.print();
-        } else {
-            alert('No valid room numbers were entered. Please enter at least one valid room number from the list.');
-        }
-    };
-
-    csvUploadInput.addEventListener('change', handleFileUpload);
-    addRoomBtn.addEventListener('click', addRoomRow);
-    generateBtn.addEventListener('click', generateLetters);
-});
