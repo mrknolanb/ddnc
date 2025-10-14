@@ -1,9 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // =========== NEW: Preload the logo image to prevent print preview issues ===========
     const logo = new Image();
     logo.src = 'remm.jpg';
-    // =================================================================================
 
     let guestData = {};
 
@@ -152,11 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const language = isJapaneseName(combinedGuestName) ? 'ja' : 'en';
                 const content = letterContent[language];
                 const labels = letterLabels[language];
+                
+                // =========== NEW: Add prefix to the guest name ===========
+                let formattedGuestName;
+                if (language === 'ja') {
+                    formattedGuestName = combinedGuestName + ' 様';
+                } else {
+                    formattedGuestName = 'Mr./Ms. ' + combinedGuestName;
+                }
+                // =========================================================
+                
                 const letterClone = letterTemplate.content.cloneNode(true);
 
                 letterClone.querySelectorAll('.title').forEach(el => el.innerHTML = content.title);
                 letterClone.querySelectorAll('.data-room-number').forEach(el => el.textContent = roomNumber);
-                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = combinedGuestName);
+                letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = formattedGuestName); // Use the formatted name
                 letterClone.querySelectorAll('.letter-body').forEach(el => el.innerHTML = content.body);
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
                 letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
@@ -173,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         if (lettersGenerated > 0) {
-            // A small delay to ensure images are rendered before printing.
             setTimeout(() => {
                 window.print();
             }, 100);
