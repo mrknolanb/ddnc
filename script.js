@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let guestData = {};
 
-    // NEW: Staff name translation list
     const staffNameTranslations = {
         'NAKAYAMA': '中山',
         'TAKAMI': '髙見',
@@ -25,6 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'OGAWA': '小川',
         'GUSHIKEN': '具志堅'
     };
+
+    // NEW: Create a reversed translation map for Japanese-to-English lookup
+    const japaneseToEnglish = Object.entries(staffNameTranslations).reduce((acc, [key, value]) => {
+        acc[value] = key;
+        return acc;
+    }, {});
 
     const letterContent = {
         en: {
@@ -193,10 +198,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedGuestName = 'Mr./Ms. ' + combinedGuestName;
                 }
                 
-                // UPDATED: Translate clerk name for Japanese letters
+                // UPDATED: Now handles both English-to-Japanese AND Japanese-to-English translation
                 let finalClerkName = clerkName;
                 if (language === 'ja') {
+                    // Find the Japanese name for the entered English name
                     const translatedName = staffNameTranslations[clerkName.toUpperCase()];
+                    if (translatedName) {
+                        finalClerkName = translatedName;
+                    }
+                } else if (language === 'en') {
+                    // Find the English name for the entered Japanese name
+                    const translatedName = japaneseToEnglish[clerkName];
                     if (translatedName) {
                         finalClerkName = translatedName;
                     }
@@ -211,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = formattedGuestName);
                 letterClone.querySelectorAll('.letter-body').forEach(el => el.innerHTML = content.body);
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
-                letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = finalClerkName); // Use final name
+                letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = finalClerkName);
                 
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
                 letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
