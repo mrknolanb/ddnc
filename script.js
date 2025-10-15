@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file, 'Shift-JIS');
     };
 
-    // UPDATED: Now includes the delete button in the generated HTML.
     const addRoomRow = () => {
         const rowId = `row-${Date.now()}`;
         const roomRow = document.createElement('div');
@@ -110,7 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
             <button type="button" class="delete-room-btn">X</button>
         `;
         roomEntryContainer.appendChild(roomRow);
-        roomRow.querySelector('.room-number-input').addEventListener('keyup', handleRoomInput);
+        
+        const new_input = roomRow.querySelector('.room-number-input');
+        new_input.addEventListener('keyup', handleRoomInput);
+        new_input.addEventListener('keydown', handleKeydown); // Add listener for 'Enter' key
+        return new_input; // Return the new input for focusing
+    };
+    
+    // NEW: Event handler for the 'Enter' key
+    const handleKeydown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Stop any default browser action
+            const new_input = addRoomRow(); // Create a new row
+            new_input.focus(); // Move the cursor to the new input field
+        }
     };
 
     const handleRoomInput = (event) => {
@@ -192,11 +204,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // NEW: Event listener for the entire container to handle clicks on delete buttons.
     roomEntryContainer.addEventListener('click', function(event) {
-        // Check if the clicked element has the 'delete-room-btn' class
         if (event.target.classList.contains('delete-room-btn')) {
-            // Find the closest parent '.room-row' and remove it
             const rowToRemove = event.target.closest('.room-row');
             if (rowToRemove) {
                 rowToRemove.remove();
