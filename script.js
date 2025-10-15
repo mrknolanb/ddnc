@@ -5,6 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let guestData = {};
 
+    // NEW: Staff name translation list
+    const staffNameTranslations = {
+        'NAKAYAMA': '中山',
+        'TAKAMI': '髙見',
+        'KANEKO A.': '金子 愛',
+        'KANEKO T.': '金子 智',
+        'KIYONAGA': '清永',
+        'IWAI': '岩井',
+        'MURABAYASHI': '村林',
+        'ZHANG': '張',
+        'YEN': 'グエン',
+        'BIJAYA': 'ビザヤ',
+        'MARK NOLAN': 'マークノラン',
+        'UTSUGI': '宇津木',
+        'MIYAKAWA': '宮川',
+        'KOKUBU': '国分',
+        'SAKAMOTO': '坂本',
+        'OGAWA': '小川',
+        'GUSHIKEN': '具志堅'
+    };
+
     const letterContent = {
         en: {
             title: 'Room Cleaning Notification',
@@ -112,16 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const new_input = roomRow.querySelector('.room-number-input');
         new_input.addEventListener('keyup', handleRoomInput);
-        new_input.addEventListener('keydown', handleKeydown); // Add listener for 'Enter' key
-        return new_input; // Return the new input for focusing
+        new_input.addEventListener('keydown', handleKeydown);
+        return new_input;
     };
     
-    // NEW: Event handler for the 'Enter' key
     const handleKeydown = (event) => {
         if (event.key === 'Enter') {
-            event.preventDefault(); // Stop any default browser action
-            const new_input = addRoomRow(); // Create a new row
-            new_input.focus(); // Move the cursor to the new input field
+            event.preventDefault();
+            const new_input = addRoomRow();
+            new_input.focus();
         }
     };
 
@@ -173,6 +193,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedGuestName = 'Mr./Ms. ' + combinedGuestName;
                 }
                 
+                // UPDATED: Translate clerk name for Japanese letters
+                let finalClerkName = clerkName;
+                if (language === 'ja') {
+                    const translatedName = staffNameTranslations[clerkName.toUpperCase()];
+                    if (translatedName) {
+                        finalClerkName = translatedName;
+                    }
+                }
+
                 const content = letterContent[language];
                 const labels = letterLabels[language];
                 const letterClone = letterTemplate.content.cloneNode(true);
@@ -182,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 letterClone.querySelectorAll('.data-guest-name').forEach(el => el.textContent = formattedGuestName);
                 letterClone.querySelectorAll('.letter-body').forEach(el => el.innerHTML = content.body);
                 letterClone.querySelectorAll('.data-date').forEach(el => el.textContent = today);
-                letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = clerkName);
+                letterClone.querySelectorAll('.data-clerk-name').forEach(el => el.textContent = finalClerkName); // Use final name
                 
                 letterClone.querySelectorAll('.label-room-no').forEach(el => el.textContent = labels.roomNo);
                 letterClone.querySelectorAll('.label-guest-name').forEach(el => el.textContent = labels.guestName);
