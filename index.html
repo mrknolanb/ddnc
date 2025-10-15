@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDNC 一括通知レター</title>
+    <title>Hotel Room Cleaning Letter Generator</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="app-container">
-        <h1>DDNC 一括通知レター</h1>
+        <h1>Room Cleaning Letter Generator</h1>
 
         <div class="upload-section">
-            <label for="csv-upload"><strong>Step 1:</strong> Upload Guest List (CSV)</label>
+            <p><strong>Step 1: Export Guest List from NEHOPS</strong><br>
+            帳票明細 >> 宿泊帳票 >> フロント帳票 >> ゲストリスト >> エクスポート >> ファイル種類 >> CSV >> 保存する</p>
+            <label for="csv-upload"><strong>Step 2: Upload Guest List (CSV)</strong></label>
             <input type="file" id="csv-upload" accept=".csv">
-            <p id="upload-status">Please upload a CSV file with two columns: Room Number, Guest Name.</p>
+            <p id="upload-status">Please upload the exported CSV file.</p>
         </div>
 
         <div id="letter-generation-section" class="hidden">
             <div class="input-group">
-                <p><strong>Step 2:</strong> Enter room numbers for letters.</p>
+                <p><strong>Step 3:</strong> Enter room numbers for letters.</p>
                 <div id="room-entry-container">
                     </div>
                 <div class="actions">
@@ -28,8 +30,8 @@
             </div>
 
             <div class="input-group">
-                <label for="clerk-name"><strong>Step 3:</strong> Enter Your Name (Clerk)</label>
-                <input type="text" id="clerk-name" placeholder="e.g., Mark Nolan / マーク・ノラン">
+                <label for="clerk-name"><strong>Step 4:</strong> Enter Your Name (Clerk)</label>
+                <input type="text" id="clerk-name" placeholder="e.g., MARK NOLAN or マークノラン">
             </div>
 
             <button id="generate-btn" type="button">Generate & Preview Letters</button>
@@ -96,6 +98,3 @@
 
 </body>
 </html>
-
-
-
