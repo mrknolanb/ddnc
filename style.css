@@ -82,7 +82,6 @@ button {
     padding: 8px 15px;
 }
 
-/* NEW: Style for the delete button */
 .delete-room-btn {
     background-color: #dc3545;
     color: white;
@@ -137,8 +136,8 @@ button {
         margin-bottom: 5mm;
     }
     .logo {
-        max-width: 120mm;
-        max-height: 40mm;
+        max-width: 102mm; /* Reduced by 15% from 120mm */
+        max-height: 34mm; /* Reduced by 15% from 40mm */
         object-fit: contain;
         margin-bottom: 3mm;
     }
