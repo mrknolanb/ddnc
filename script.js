@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'GUSHIKEN': '具志堅'
     };
 
-    // NEW: Create a reversed translation map for Japanese-to-English lookup
     const japaneseToEnglish = Object.entries(staffNameTranslations).reduce((acc, [key, value]) => {
         acc[value] = key;
         return acc;
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         ja: {
             title: '客室清掃のお知らせ',
-            body: `<p>ご宿泊いただき、誠にありがとうございます。</p><p>当ホテルのポリシーに基づき、2日間清掃が行われなかったお部屋は、翌日に清掃を実施しております。<br>つきましては、明日の午前10時から午後2時の間に、スタッフがお部屋の清掃に入室いたします。</p><p>お部屋のドアに「清掃してください」の札をお出しください。ご不明な点がございましたら、お気軽にお問い合わせください。</p><p>何卒、ご理解ご協力のほど、よろしくお願い申し上げます。</p>`
+            body: `<p>ご宿泊いただき、誠にありがとうございます。</p><p>当ホテルのポリシーに基づき、2日間清掃が行われなかったお部屋は、翌日に清掃を実施しております。つきましては、明日の午前10時から午後2時の間に、スタッフがお部屋の清掃に入室いたします。</p><p>お部屋のドアに「清掃してください」の札をお出しください。ご不明な点がございましたら、お気軽にお問い合わせください。</p><p>何卒、ご理解ご協力のほど、よろしくお願い申し上げます。</p>`
         }
     };
 
@@ -69,11 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const printArea = document.getElementById('print-area');
     const letterTemplate = document.getElementById('letter-template');
 
+    // UPDATED: Now filters out any name containing numbers
     const parseCSV = (csvText) => {
         const data = {};
         const lines = csvText.split(/\r\n|\n/);
         const unquote = (str) => str.replace(/^"|"$/g, '');
-        const hasLetters = (str) => /[a-zA-Zァ-ヶーｦ-ﾟ]/.test(str);
+        const containsNumber = (str) => /\d/.test(str); // Checks if the string has any digit
 
         lines.forEach((line, index) => {
             const trimmedLine = line.trim();
@@ -87,7 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (index === 0 && isNaN(parseInt(roomColumn, 10))) return;
 
-            if (roomColumn && nameColumn && hasLetters(nameColumn)) {
+            // Only add the name if it exists and does NOT contain a number
+            if (roomColumn && nameColumn && !containsNumber(nameColumn)) {
                 if (!data[roomColumn]) {
                     data[roomColumn] = [];
                 }
@@ -198,16 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedGuestName = 'Mr./Ms. ' + combinedGuestName;
                 }
                 
-                // UPDATED: Now handles both English-to-Japanese AND Japanese-to-English translation
                 let finalClerkName = clerkName;
                 if (language === 'ja') {
-                    // Find the Japanese name for the entered English name
                     const translatedName = staffNameTranslations[clerkName.toUpperCase()];
                     if (translatedName) {
                         finalClerkName = translatedName;
                     }
                 } else if (language === 'en') {
-                    // Find the English name for the entered Japanese name
                     const translatedName = japaneseToEnglish[clerkName];
                     if (translatedName) {
                         finalClerkName = translatedName;
@@ -258,4 +256,3 @@ document.addEventListener('DOMContentLoaded', () => {
     addRoomBtn.addEventListener('click', addRoomRow);
     generateBtn.addEventListener('click', generateLetters);
 });
-
