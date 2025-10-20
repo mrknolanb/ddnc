@@ -1,28 +1,29 @@
 /* === Global Styles === */
 body {
     font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: #f0f2f5; /* Lighter grey background */
+    background-color: #f0f2f5;
     color: #333;
     margin: 0;
     padding: 20px;
     line-height: 1.6;
 }
 
-.hidden { display: none !important; } /* More forceful hidden style */
+.hidden { display: none !important; }
 
 .app-container {
     max-width: 800px;
     margin: 30px auto;
-    background: #ffffff; /* White container */
-    padding: 0; /* Remove padding, handled by cards */
+    background: #ffffff;
+    padding: 0;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
-    overflow: hidden; /* Ensures header background stays contained */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    position: relative; /* Needed for absolute positioning of the floating button */
 }
 
 /* === Header === */
 .app-header {
-    background-color: #005A9C; /* Professional blue */
+    background-color: #005A9C;
     color: white;
     padding: 20px 30px;
     border-bottom: 1px solid #dee2e6;
@@ -36,9 +37,9 @@ body {
 /* === Card Layout === */
 .card {
     padding: 25px 30px;
-    margin: 20px; /* Add margin around cards */
+    margin: 20px;
     background-color: #fff;
-    border: 1px solid #e9ecef; /* Lighter border */
+    border: 1px solid #e9ecef;
     border-radius: 6px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
@@ -55,35 +56,50 @@ body {
 .upload-section {
     text-align: center;
 }
+/* Reduce bottom margin for the step 1 card when step 2 is also shown */
+#initial-steps-container .card:first-child {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+}
+/* Adjust top margin and border for the step 2 card */
+#initial-steps-container .card:last-child {
+    margin-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+
 .instruction-box {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     padding: 15px;
-    margin-bottom: 25px; /* More space below instructions */
+    margin-bottom: 25px;
     text-align: left;
 }
 .instruction-box p { margin: 0 0 10px 0; }
 .nehops-steps {
     list-style: none; padding: 0; margin: 0;
     display: flex; flex-wrap: wrap; align-items: center;
-    justify-content: center; gap: 8px 10px; /* Adjust gap */
+    justify-content: center; gap: 8px 10px;
 }
 .nehops-steps li {
-    background-color: #e2e6ea; /* Slightly darker background */
+    background-color: #e2e6ea;
     padding: 6px 12px;
     border-radius: 4px;
     font-size: 0.9em;
     color: #495057;
 }
 .nehops-steps li:not(:last-child)::after {
-    content: '→'; /* Use arrow */
+    content: '→';
     margin-left: 10px;
     color: #005A9C;
     font-weight: bold;
 }
 .tip {
-    font-size: 0.85em; color: #6c757d; /* Lighter tip text */
+    font-size: 0.85em; color: #6c757d;
     margin-top: 15px !important; text-align: center;
 }
 #upload-status {
@@ -94,9 +110,9 @@ body {
 
 /* === File Upload Button Style === */
 .file-upload-label {
-    display: inline-flex; /* Use flex for alignment */
+    display: inline-flex;
     align-items: center;
-    gap: 8px; /* Space between icon and text */
+    gap: 8px;
     background-color: #007bff;
     color: white;
     padding: 10px 18px;
@@ -109,16 +125,44 @@ body {
     background-color: #0056b3;
 }
 .file-upload-input {
-    display: none; /* Hide the default input */
+    display: none;
 }
 .file-upload-label svg {
-    margin-bottom: -2px; /* Fine-tune icon vertical alignment */
+    margin-bottom: -2px;
+}
+
+/* === Floating Re-upload Button === */
+.floating-btn {
+    position: absolute;
+    top: 90px; /* Adjust as needed, below the header */
+    left: 20px;
+    background-color: #6c757d; /* Grey button */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    padding: 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    z-index: 10; /* Make sure it's above other content */
+}
+.floating-btn:hover {
+    background-color: #5a6268;
+}
+.floating-btn svg {
+    width: 24px;
+    height: 24px;
 }
 
 
 /* === Input Groups & Room Rows === */
 .input-group label {
-    font-weight: 600; /* Slightly bolder labels */
+    font-weight: 600;
     display: block;
     margin-bottom: 8px;
     color: #495057;
@@ -127,7 +171,7 @@ body {
     width: 100%;
     padding: 10px 12px;
     box-sizing: border-box;
-    border: 1px solid #ced4da; /* Standard input border */
+    border: 1px solid #ced4da;
     border-radius: 4px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -140,10 +184,10 @@ body {
 .room-row {
     display: flex;
     align-items: center;
-    gap: 10px; /* Reduced gap */
+    gap: 10px;
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid #f1f1f1; /* Lighter separator */
+    border-bottom: 1px solid #f1f1f1;
 }
 .room-row:last-child {
     border-bottom: none;
@@ -151,23 +195,23 @@ body {
     padding-bottom: 0;
 }
 .room-row label {
-    font-weight: 500; /* Normal weight */
-    flex-basis: 90px; /* Slightly smaller label */
-    flex-shrink: 0; /* Prevent label from shrinking */
+    font-weight: 500;
+    flex-basis: 90px;
+    flex-shrink: 0;
     color: #495057;
     font-size: 0.95em;
 }
 .room-row input { padding: 8px 10px; flex-grow: 1; }
 .guest-name-display {
-    flex-basis: 250px; /* Adjust basis */
+    flex-basis: 250px;
     flex-shrink: 0;
-    font-style: normal; /* Remove italic */
+    font-style: normal;
     color: #6c757d;
     font-size: 0.9em;
     padding: 8px 10px;
     background-color: #f8f9fa;
     border-radius: 4px;
-    min-height: 20px; /* Ensure consistent height */
+    min-height: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -185,7 +229,7 @@ button {
     color: white;
     background-color: #007bff;
     transition: background-color 0.2s ease, transform 0.1s ease;
-    display: inline-flex; /* Align icon and text */
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 }
@@ -193,7 +237,7 @@ button:hover {
     background-color: #0056b3;
 }
 button:active {
-    transform: translateY(1px); /* Subtle press effect */
+    transform: translateY(1px);
 }
 
 #add-room-btn {
@@ -206,49 +250,48 @@ button:active {
 .delete-room-btn {
     background-color: #dc3545;
     color: white;
+    border: none;
     border-radius: 50%;
-    width: 28px; /* Slightly larger */
+    width: 28px;
     height: 28px;
     font-weight: bold;
-    font-size: 1.1em;
-    line-height: 28px;
-    text-align: center;
+    font-size: 1em;
+    cursor: pointer;
     padding: 0;
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
 }
 .delete-room-btn:hover { background-color: #c82333; }
 
 .generate-button {
-    width: 100%;
-    justify-content: center; /* Center icon and text */
+    width: calc(100% - 40px); /* Adjust width considering card margins */
+    justify-content: center;
     font-size: 1.1em;
     padding: 12px 20px;
-    margin-top: 10px; /* Ensure space from last card */
-    background-color: #28a745; /* Green for generate */
+    margin: 0 20px 20px 20px; /* Position button below cards */
+    background-color: #28a745;
 }
 .generate-button:hover { background-color: #218838; }
 .generate-button svg { margin-bottom: -2px; }
 
-/* Visually hide labels if needed, but keep for screen readers */
 .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
 }
 
 
 #print-area { display: none; }
 
-/* ================= PRINT STYLES (CENTERED HEADER) ================= */
+/* ================= PRINT STYLES (PAGE ALIGNMENT FIX) ================= */
 @media print {
     @page { margin: 0; }
-    body { margin: 0; background: none; font-family: Meiryo, sans-serif; /* Use common Japanese font for printing */ }
+    html, body {
+        margin: 0 !important; padding: 0 !important;
+        background: none; font-family: Meiryo, sans-serif;
+    }
     .app-container { display: none; }
     #print-area { display: block; }
     .page {
