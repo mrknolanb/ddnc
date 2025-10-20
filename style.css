@@ -1,217 +1,284 @@
-/* General Body and UI Styles */
+/* === Global Styles === */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+    font-family: "Segoe UI", Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f0f2f5; /* Lighter grey background */
     color: #333;
     margin: 0;
     padding: 20px;
+    line-height: 1.6;
 }
-.hidden { display: none; }
+
+.hidden { display: none !important; } /* More forceful hidden style */
 
 .app-container {
     max-width: 800px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px 30px;
+    margin: 30px auto;
+    background: #ffffff; /* White container */
+    padding: 0; /* Remove padding, handled by cards */
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-h1 {
-    color: #005a87;
-    text-align: center;
-}
-.upload-section {
-    text-align: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    overflow: hidden; /* Ensures header background stays contained */
 }
 
-/* NEW: Styles for the instruction box */
+/* === Header === */
+.app-header {
+    background-color: #005A9C; /* Professional blue */
+    color: white;
+    padding: 20px 30px;
+    border-bottom: 1px solid #dee2e6;
+}
+.app-header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+
+/* === Card Layout === */
+.card {
+    padding: 25px 30px;
+    margin: 20px; /* Add margin around cards */
+    background-color: #fff;
+    border: 1px solid #e9ecef; /* Lighter border */
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+    color: #005A9C;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* === Upload Section Specifics === */
+.upload-section {
+    text-align: center;
+}
 .instruction-box {
     background-color: #f8f9fa;
     border: 1px solid #dee2e6;
     border-radius: 5px;
     padding: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* More space below instructions */
     text-align: left;
 }
-.instruction-box p {
-    margin: 0 0 10px 0;
-}
+.instruction-box p { margin: 0 0 10px 0; }
 .nehops-steps {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-wrap: wrap; align-items: center;
+    justify-content: center; gap: 8px 10px; /* Adjust gap */
 }
 .nehops-steps li {
-    background-color: #e9ecef;
-    padding: 5px 10px;
+    background-color: #e2e6ea; /* Slightly darker background */
+    padding: 6px 12px;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 0.9em;
+    color: #495057;
 }
 .nehops-steps li:not(:last-child)::after {
-    content: '>>';
+    content: '→'; /* Use arrow */
     margin-left: 10px;
-    color: #6c757d;
+    color: #005A9C;
+    font-weight: bold;
 }
 .tip {
-    font-size: 13px;
-    color: #495057;
-    margin-top: 10px !important;
-    text-align: center;
+    font-size: 0.85em; color: #6c757d; /* Lighter tip text */
+    margin-top: 15px !important; text-align: center;
+}
+#upload-status {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #6c757d;
 }
 
-
-.input-group {
-    margin-bottom: 20px;
-    padding: 15px;
-    border: 1px solid #e9e9e9;
+/* === File Upload Button Style === */
+.file-upload-label {
+    display: inline-flex; /* Use flex for alignment */
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
+    background-color: #007bff;
+    color: white;
+    padding: 10px 18px;
     border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-weight: 500;
 }
+.file-upload-label:hover {
+    background-color: #0056b3;
+}
+.file-upload-input {
+    display: none; /* Hide the default input */
+}
+.file-upload-label svg {
+    margin-bottom: -2px; /* Fine-tune icon vertical alignment */
+}
+
+
+/* === Input Groups & Room Rows === */
 .input-group label {
-    font-weight: bold;
+    font-weight: 600; /* Slightly bolder labels */
     display: block;
     margin-bottom: 8px;
+    color: #495057;
 }
-#clerk-name {
+.input-group input[type="text"] {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 1px solid #ced4da; /* Standard input border */
     border-radius: 4px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
+.input-group input[type="text"]:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 .room-row {
     display: flex;
     align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 10px; /* Reduced gap */
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1; /* Lighter separator */
+}
+.room-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 .room-row label {
-    font-weight: normal;
-    flex-basis: 100px;
+    font-weight: 500; /* Normal weight */
+    flex-basis: 90px; /* Slightly smaller label */
+    flex-shrink: 0; /* Prevent label from shrinking */
+    color: #495057;
+    font-size: 0.95em;
 }
-.room-row input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex-grow: 1;
-}
+.room-row input { padding: 8px 10px; flex-grow: 1; }
 .guest-name-display {
-    flex-basis: 300px;
-    font-style: italic;
-    color: #555;
+    flex-basis: 250px; /* Adjust basis */
+    flex-shrink: 0;
+    font-style: normal; /* Remove italic */
+    color: #6c757d;
+    font-size: 0.9em;
+    padding: 8px 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    min-height: 20px; /* Ensure consistent height */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
-.actions { text-align: right; }
+.actions { text-align: right; margin-top: 15px; }
+
+/* === Buttons === */
 button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 1em;
+    font-weight: 500;
     color: white;
     background-color: #007bff;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex; /* Align icon and text */
+    align-items: center;
+    gap: 8px;
 }
+button:hover {
+    background-color: #0056b3;
+}
+button:active {
+    transform: translateY(1px); /* Subtle press effect */
+}
+
 #add-room-btn {
     background-color: #6c757d;
-    font-size: 14px;
+    font-size: 0.9em;
     padding: 8px 15px;
 }
+#add-room-btn:hover { background-color: #5a6268; }
 
 .delete-room-btn {
     background-color: #dc3545;
     color: white;
-    border: none;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 28px; /* Slightly larger */
+    height: 28px;
     font-weight: bold;
-    cursor: pointer;
-    line-height: 25px;
+    font-size: 1.1em;
+    line-height: 28px;
     text-align: center;
     padding: 0;
+    flex-shrink: 0; /* Prevent shrinking */
 }
-.delete-room-btn:hover {
-    background-color: #c82333;
+.delete-room-btn:hover { background-color: #c82333; }
+
+.generate-button {
+    width: 100%;
+    justify-content: center; /* Center icon and text */
+    font-size: 1.1em;
+    padding: 12px 20px;
+    margin-top: 10px; /* Ensure space from last card */
+    background-color: #28a745; /* Green for generate */
 }
+.generate-button:hover { background-color: #218838; }
+.generate-button svg { margin-bottom: -2px; }
+
+/* Visually hide labels if needed, but keep for screen readers */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 
 #print-area { display: none; }
 
 /* ================= PRINT STYLES (CENTERED HEADER) ================= */
 @media print {
-    @page {
-        margin: 0;
-    }
-    body { margin: 0; background: none; }
+    @page { margin: 0; }
+    body { margin: 0; background: none; font-family: Meiryo, sans-serif; /* Use common Japanese font for printing */ }
     .app-container { display: none; }
     #print-area { display: block; }
     .page {
-        width: 210mm;
-        height: 297mm;
-        page-break-after: always;
-        display: flex;
-        flex-direction: column;
-        box-sizing: border-box;
+        width: 210mm; height: 297mm; page-break-after: always;
+        display: flex; flex-direction: column; box-sizing: border-box;
     }
     .letter-half {
-        height: 148.5mm;
-        box-sizing: border-box;
-        padding: 10mm;
-        display: flex;
-        flex-direction: column;
+        height: 148.5mm; box-sizing: border-box; padding: 10mm;
+        display: flex; flex-direction: column;
     }
-    .front-desk-copy { 
-        border-top: 2px dashed #000; 
-    }
+    .front-desk-copy { border-top: 2px dashed #000; }
     .header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        border-bottom: 1px solid #333;
-        padding-bottom: 5mm;
-        margin-bottom: 5mm;
+        display: flex; flex-direction: column; align-items: center;
+        border-bottom: 1px solid #333; padding-bottom: 5mm; margin-bottom: 5mm;
     }
     .logo {
-        max-width: 102mm;
-        max-height: 34mm;
-        object-fit: contain;
-        margin-bottom: 3mm;
+        max-width: 102mm; max-height: 34mm; object-fit: contain; margin-bottom: 3mm;
     }
-    .title {
-        font-size: 14pt;
-        font-weight: bold;
-        margin: 0;
-    }
+    .title { font-size: 14pt; font-weight: bold; margin: 0; }
     .recipient-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 12pt;
-        line-height: 1.5;
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 12pt; line-height: 1.5;
     }
-    .guest-name-line {
-        font-size: 12pt;
-        line-height: 1.5;
-        margin: 0;
-    }
+    .guest-name-line { font-size: 12pt; line-height: 1.5; margin: 0; }
     .letter-body {
-        font-size: 11pt;
-        line-height: 1.6;
-        margin-top: 8mm;
-        flex-grow: 1;
+        font-size: 11pt; line-height: 1.6; margin-top: 8mm; flex-grow: 1;
     }
     .footer {
-        width: 100%;
-        font-size: 10pt;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+        width: 100%; font-size: 10pt; display: flex;
+        justify-content: space-between; align-items: flex-end;
     }
     .signature { font-size: 11pt; line-height: 1.4; }
     .copy-indicator { font-weight: bold; font-style: italic; }
