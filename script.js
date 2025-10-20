@@ -67,13 +67,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate-btn');
     const printArea = document.getElementById('print-area');
     const letterTemplate = document.getElementById('letter-template');
+    const step1Card = document.getElementById('step1-card'); // Get the Step 1 card
 
-    // UPDATED: Now filters out any name containing numbers
     const parseCSV = (csvText) => {
         const data = {};
         const lines = csvText.split(/\r\n|\n/);
         const unquote = (str) => str.replace(/^"|"$/g, '');
-        const containsNumber = (str) => /\d/.test(str); // Checks if the string has any digit
+        const containsNumber = (str) => /\d/.test(str);
 
         lines.forEach((line, index) => {
             const trimmedLine = line.trim();
@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (index === 0 && isNaN(parseInt(roomColumn, 10))) return;
 
-            // Only add the name if it exists and does NOT contain a number
             if (roomColumn && nameColumn && !containsNumber(nameColumn)) {
                 if (!data[roomColumn]) {
                     data[roomColumn] = [];
@@ -98,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     };
     
+    // UPDATED: Added line to hide Step 1 card on success
     const handleFileUpload = (event) => {
         const file = event.target.files[0];
         if (!file) return;
@@ -108,19 +108,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const recordCount = Object.keys(guestData).length;
             if (recordCount > 0) {
                 uploadStatus.textContent = `✅ Success! ${recordCount} rooms loaded.`;
-                uploadStatus.style.color = 'green';
+                uploadStatus.style.color = '#28a745';
                 letterGenerationSection.classList.remove('hidden');
+                step1Card.classList.add('hidden'); // Hide Step 1 card
                 roomEntryContainer.innerHTML = '';
-                addRoomRow();
+                addRoomRow().focus();
             } else {
                 uploadStatus.textContent = '❌ Error: Could not find valid data. Please check the CSV file format.';
-                uploadStatus.style.color = 'red';
+                uploadStatus.style.color = '#dc3545';
                 letterGenerationSection.classList.add('hidden');
+                step1Card.classList.remove('hidden'); // Ensure Step 1 is visible on error
             }
         };
         reader.onerror = () => {
              uploadStatus.textContent = '❌ Error: Could not read the file.';
-             uploadStatus.style.color = 'red';
+             uploadStatus.style.color = '#dc3545';
+             step1Card.classList.remove('hidden'); // Ensure Step 1 is visible on error
         };
         reader.readAsText(file, 'Shift-JIS');
     };
@@ -130,10 +133,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const roomRow = document.createElement('div');
         roomRow.className = 'room-row';
         roomRow.innerHTML = `
-            <label for="room-${rowId}">Room Number:</label>
-            <input type="text" id="room-${rowId}" class="room-number-input" placeholder="e.g., 501">
-            <span class="guest-name-display">[Guest Name]</span>
-            <button type="button" class="delete-room-btn">X</button>
+            <label for="room-${rowId}">部屋番号:</label>
+            <input type="text" id="room-${rowId}" class="room-number-input" placeholder="例：501">
+            <span class="guest-name-display">[お客様名]</span>
+            <button type="button" class="delete-room-btn" aria-label="Delete room">X</button>
         `;
         roomEntryContainer.appendChild(roomRow);
         
@@ -160,21 +163,24 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (names && names.length > 0) {
             nameDisplay.textContent = names.join(', ');
-            nameDisplay.style.color = '#005a87';
+            nameDisplay.style.color = '#495057';
+            nameDisplay.style.fontStyle = 'normal';
         } else {
-            nameDisplay.textContent = 'Guest not found';
+            nameDisplay.textContent = 'お客様が見つかりません';
             nameDisplay.style.color = '#dc3545';
+            nameDisplay.style.fontStyle = 'italic';
         }
     };
     
     const isJapaneseName = (str) => {
-        return /[ァ-ヶーｦ-ﾟ]/.test(str);
+        return /[ァ-ヶーｦ-ﾟ亜-熙ぁ-ん]/.test(str);
     };
 
     const generateLetters = () => {
         const clerkName = clerkNameInput.value.trim();
         if (!clerkName) {
-            alert('Please enter the clerk\'s name before generating letters.');
+            alert('担当者名を入力してください。');
+            clerkNameInput.focus();
             return;
         }
 
@@ -209,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const translatedName = japaneseToEnglish[clerkName];
                     if (translatedName) {
                         finalClerkName = translatedName;
+                    } else {
+                        finalClerkName = clerkName.toUpperCase();
                     }
                 }
 
@@ -239,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.print();
             }, 100);
         } else {
-            alert('No valid room numbers were entered. Please enter at least one valid room number from the list.');
+            alert('有効な部屋番号が入力されていません。リストから有効な部屋番号を少なくとも1つ入力してください。');
         }
     };
 
