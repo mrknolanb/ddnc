@@ -13,7 +13,7 @@
             <h1>DDNC 一括通知レター</h1>
         </header>
 
-        <div class="card upload-section">
+        <div class="card upload-section" id="step1-card">
             <h2>ステップ1：NEHOPSからゲストリストを出力</h2>
             <div class="instruction-box">
                 <ol class="nehops-steps">
@@ -52,8 +52,8 @@
 
             <div class="card input-group">
                  <h2>ステップ4：担当者名を入力</h2>
-                <label for="clerk-name" class="sr-only">担当者名:</label> {/* Label is visually hidden but good for accessibility */}
-                <input type="text" id="clerk-name" placeholder="例：NAKAYAMA または 中山">
+                <label for="clerk-name" class="sr-only">担当者名:</label>
+                <input type="text" id="clerk-name" placeholder="例：OGAWA または 小川">
             </div>
 
             <button id="generate-btn" type="button" class="generate-button">
