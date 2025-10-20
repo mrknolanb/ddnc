@@ -26,6 +26,48 @@ h1 {
     border-bottom: 1px solid #eee;
     margin-bottom: 20px;
 }
+
+/* NEW: Styles for the instruction box */
+.instruction-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.instruction-box p {
+    margin: 0 0 10px 0;
+}
+.nehops-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.nehops-steps li {
+    background-color: #e9ecef;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+.nehops-steps li:not(:last-child)::after {
+    content: '>>';
+    margin-left: 10px;
+    color: #6c757d;
+}
+.tip {
+    font-size: 13px;
+    color: #495057;
+    margin-top: 10px !important;
+    text-align: center;
+}
+
+
 .input-group {
     margin-bottom: 20px;
     padding: 15px;
@@ -136,8 +178,8 @@ button {
         margin-bottom: 5mm;
     }
     .logo {
-        max-width: 102mm; /* Reduced by 15% from 120mm */
-        max-height: 34mm; /* Reduced by 15% from 40mm */
+        max-width: 102mm;
+        max-height: 34mm;
         object-fit: contain;
         margin-bottom: 3mm;
     }
