@@ -12,8 +12,21 @@
         <h1>DDNC 一括通知レター</h1>
 
         <div class="upload-section">
-            <p><strong>Step 1: Export Guest List from NEHOPS</strong><br>
-            帳票.分析 >> 宿泊帳票メニュー >> フロント帳票 >> ゲストリスト >>出力>> エクスポート >> ファイル種類 >> .CSV >> 保存<br>**デスクトップに保存した方が探しやすい**</p>
+            <div class="instruction-box">
+                <p><strong>Step 1: Export Guest List from NEHOPS</strong></p>
+                <ol class="nehops-steps">
+                    <li>帳票.分析</li>
+                    <li>宿泊帳票メニュー</li>
+                    <li>フロント帳票</li>
+                    <li>ゲストリスト</li>
+                    <li>出力</li>
+                    <li>エクスポート</li>
+                    <li>ファイル種類: <strong>.CSV</strong></li>
+                    <li>保存</li>
+                </ol>
+                <p class="tip">**デスクトップに保存した方が探しやすい**</p>
+            </div>
+            
             <label for="csv-upload"><strong>Step 2: Upload Guest List (CSV)</strong></label>
             <input type="file" id="csv-upload" accept=".csv">
             <p id="upload-status">Please upload the exported CSV file.</p>
@@ -23,7 +36,7 @@
             <div class="input-group">
                 <p><strong>Step 3:</strong> Enter room numbers for letters.</p>
                 <div id="room-entry-container">
-                    </div>
+                </div>
                 <div class="actions">
                     <button id="add-room-btn" type="button">+ Add Another Room</button>
                 </div>
@@ -98,5 +111,3 @@
 
 </body>
 </html>
-
-
